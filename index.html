@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LAPORAN TARGET DISTRIBUSI - System</title>
+    <title>LAPORAN TARGET DISTRIBUSI - System REVISI</title>
     <style>
         * {
             margin: 0;
@@ -33,7 +33,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -127,6 +127,8 @@
 
         input[type="text"],
         input[type="password"],
+        input[type="number"],
+        input[type="date"],
         select {
             width: 100%;
             padding: 12px;
@@ -140,6 +142,8 @@
 
         input[type="text"]:focus,
         input[type="password"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
         select:focus {
             outline: none;
             border-color: var(--accent);
@@ -187,6 +191,12 @@
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid var(--danger);
             color: var(--danger);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
         }
 
         /* Dashboard */
@@ -250,6 +260,7 @@
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-top: 8px;
         }
 
         .logout-btn:hover {
@@ -327,24 +338,6 @@
 
         .form-group-full {
             grid-column: 1 / -1;
-        }
-
-        input[type="number"],
-        input[type="date"] {
-            width: 100%;
-            padding: 12px;
-            background: var(--dark-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        input[type="number"]:focus,
-        input[type="date"]:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
         }
 
         .stats-row {
@@ -455,38 +448,30 @@
         .btn-secondary {
             background: var(--secondary);
             color: white;
+            width: auto;
         }
 
         .btn-secondary:hover {
             background: #059669;
         }
 
-        .loading {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 2px solid rgba(6, 182, 212, 0.3);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 48px;
+        .salesman-target-row {
+            background: var(--dark-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
             margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: end;
         }
 
         @media (max-width: 768px) {
+            .salesman-target-row {
+                grid-template-columns: 1fr;
+            }
+            
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -507,6 +492,17 @@
             th, td {
                 padding: 8px;
             }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -595,7 +591,7 @@
                         <div id="itemInfo" style="display: none;">
                             <div class="stats-row">
                                 <div class="stat-card">
-                                    <div class="stat-label">Target</div>
+                                    <div class="stat-label">Target (Target Salesman)</div>
                                     <div class="stat-value" id="targetDisplay">0</div>
                                 </div>
                                 <div class="stat-card">
@@ -623,7 +619,7 @@
                             </div>
 
                             <button class="btn-primary" onclick="submitReport()">💾 SUBMIT LAPORAN</button>
-                            <button class="btn-secondary" onclick="resetForm()" style="margin-left: 10px;">🔄 RESET</button>
+                            <button class="btn-secondary" onclick="resetForm()" style="margin-left: 10px; width: auto;">🔄 RESET</button>
                         </div>
 
                         <div id="noItemMessage" class="alert alert-error" style="display: none; margin-top: 20px;">
@@ -645,6 +641,7 @@
             <div id="supervisorDashboard" style="display: none;">
                 <div class="tabs">
                     <button class="tab-button active" onclick="switchTab('master')">📋 DATA MASTER</button>
+                    <button class="tab-button" onclick="switchTab('target')">🎯 TARGET SALESMAN</button>
                     <button class="tab-button" onclick="switchTab('salesman')">👥 KELOLA SALESMAN</button>
                     <button class="tab-button" onclick="switchTab('report')">📊 LAPORAN</button>
                     <button class="tab-button" onclick="switchTab('settings')">⚙️ PENGATURAN</button>
@@ -653,7 +650,7 @@
                 <!-- Tab: DATA MASTER -->
                 <div id="master" class="tab-content active">
                     <div class="card">
-                        <div class="card-title">📋 Master Item & Target</div>
+                        <div class="card-title">📋 Master Item</div>
                         
                         <div class="form-row">
                             <div class="form-group">
@@ -672,10 +669,6 @@
                                 <input type="text" id="newItemName" placeholder="Contoh: Item A">
                             </div>
                             <div class="form-group">
-                                <label>Target (tk)</label>
-                                <input type="number" id="newItemTarget" placeholder="0" min="0" step="0.1">
-                            </div>
-                            <div class="form-group">
                                 <label>Tanggal Berlaku</label>
                                 <input type="date" id="newItemDate">
                             </div>
@@ -685,6 +678,18 @@
 
                         <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--accent); font-size: 16px;">Daftar Item</h3>
                         <div id="masterItemsList"></div>
+                    </div>
+                </div>
+
+                <!-- Tab: TARGET SALESMAN ⭐ BARU -->
+                <div id="target" class="tab-content">
+                    <div class="card">
+                        <div class="card-title">🎯 Atur Target Per Salesman Per Item</div>
+                        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 13px;">
+                            📌 Setiap salesman bisa memiliki target yang berbeda-beda untuk setiap item.
+                        </p>
+
+                        <div id="targetSettingContainer"></div>
                     </div>
                 </div>
 
@@ -755,7 +760,7 @@
                         </div>
 
                         <button class="btn-primary" onclick="saveSettings()">💾 SIMPAN PENGATURAN</button>
-                        <button class="btn-secondary" onclick="testConnection()" style="margin-left: 10px;">🔗 TEST KONEKSI</button>
+                        <button class="btn-secondary" onclick="testConnection()" style="margin-left: 10px; width: auto;">🔗 TEST KONEKSI</button>
                     </div>
 
                     <div class="card">
@@ -810,6 +815,7 @@
                 scriptUrl: '',
                 salesman: ['S005', 'S016', 'S017', 'S018', 'S019', 'S120', 'S121'],
                 masterItems: [],
+                salesmanTargets: {}, // ⭐ NEW: Target per salesman per item
                 reports: []
             };
         }
@@ -891,6 +897,7 @@
                 document.getElementById('userName').textContent = 'Supervisor';
                 document.getElementById('userRole').textContent = 'Role: SUPERVISOR';
                 loadMasterDataList();
+                loadTargetSettings(); // ⭐ NEW
                 loadSalesmanList();
                 updateSalesmanFilterList();
                 loadAllReports();
@@ -918,7 +925,7 @@
             items.forEach(item => {
                 const option = document.createElement('option');
                 option.value = item.id;
-                option.textContent = `${item.name} (Target: ${item.target} tk)`;
+                option.textContent = item.name;
                 itemSelect.appendChild(option);
             });
 
@@ -932,7 +939,12 @@
             const item = appData.masterItems.find(i => i.id === itemId);
 
             if (item) {
-                document.getElementById('targetDisplay').textContent = item.target;
+                // ⭐ Get target dari salesman target, bukan master item
+                const salesmantargetKey = `${currentUser.code}_${itemId}`;
+                const salesmanTarget = appData.salesmanTargets[salesmantargetKey];
+                const targetValue = salesmanTarget ? salesmanTarget.target : 0;
+                
+                document.getElementById('targetDisplay').textContent = targetValue;
                 calculateStats();
             }
         }
@@ -944,7 +956,7 @@
             const itemId = document.getElementById('itemSelect').value;
 
             // Calculate MTD
-            const startDate = new Date(document.getElementById('masterPeriodStart')?.value || appData.masterItems[0]?.date);
+            const startDate = new Date(appData.salesmanTargets[`${currentUser.code}_${itemId}`]?.startDate || document.getElementById('masterPeriodStart')?.value);
             const endDate = new Date(document.getElementById('reportDate').value);
 
             const mtdReports = appData.reports.filter(r => {
@@ -1022,10 +1034,13 @@
                 
                 reports.forEach(report => {
                     const item = appData.masterItems.find(i => i.id === report.itemId);
+                    const salesmanTarget = appData.salesmanTargets[`${currentUser.code}_${report.itemId}`];
+                    const target = salesmanTarget ? salesmanTarget.target : 0;
+                    
                     html += `
                         <tr>
                             <td>${item?.name || 'N/A'}</td>
-                            <td class="value-cell">${item?.target || 0}</td>
+                            <td class="value-cell">${target}</td>
                             <td class="value-cell">${report.hi}</td>
                             <td><button class="btn-small btn-delete" onclick="deleteReport('${report.id}')">🗑️ Hapus</button></td>
                         </tr>
@@ -1050,10 +1065,9 @@
         // ============== SUPERVISOR FUNCTIONS ==============
         function addMasterItem() {
             const name = document.getElementById('newItemName').value.trim();
-            const target = parseFloat(document.getElementById('newItemTarget').value);
             const date = document.getElementById('newItemDate').value;
 
-            if (!name || !target || !date) {
+            if (!name || !date) {
                 alert('Isi semua field');
                 return;
             }
@@ -1061,16 +1075,15 @@
             appData.masterItems.push({
                 id: Date.now().toString(),
                 name: name,
-                target: target,
                 date: date
             });
 
             saveAppData();
             showAlert('✅ Item berhasil ditambahkan!', 'success');
             document.getElementById('newItemName').value = '';
-            document.getElementById('newItemTarget').value = '';
             document.getElementById('newItemDate').valueAsDate = new Date();
             loadMasterDataList();
+            loadTargetSettings(); // ⭐ Refresh target settings
         }
 
         function loadMasterDataList() {
@@ -1082,7 +1095,7 @@
             }
 
             let html = '<div class="table-wrapper"><table>';
-            html += '<thead><tr><th>Tanggal</th><th>Nama Item</th><th>Target (tk)</th><th>Aksi</th></tr></thead><tbody>';
+            html += '<thead><tr><th>Tanggal</th><th>Nama Item</th><th>Aksi</th></tr></thead><tbody>';
 
             appData.masterItems.forEach(item => {
                 const dateObj = new Date(item.date + 'T00:00:00');
@@ -1092,7 +1105,6 @@
                     <tr>
                         <td>${dateStr}</td>
                         <td>${item.name}</td>
-                        <td class="value-cell">${item.target}</td>
                         <td><button class="btn-small btn-delete" onclick="deleteMasterItem('${item.id}')">🗑️ Hapus</button></td>
                     </tr>
                 `;
@@ -1108,6 +1120,79 @@
             saveAppData();
             showAlert('✅ Item berhasil dihapus!', 'success');
             loadMasterDataList();
+            loadTargetSettings(); // ⭐ Refresh
+        }
+
+        // ⭐ NEW: LOAD TARGET SETTINGS
+        function loadTargetSettings() {
+            const container = document.getElementById('targetSettingContainer');
+            
+            if (appData.masterItems.length === 0) {
+                container.innerHTML = '<div class="alert alert-error">⚠️ Buat item master dulu di tab "DATA MASTER"</div>';
+                return;
+            }
+
+            if (appData.salesman.length === 0) {
+                container.innerHTML = '<div class="alert alert-error">⚠️ Buat kode salesman dulu di tab "KELOLA SALESMAN"</div>';
+                return;
+            }
+
+            let html = '';
+
+            appData.masterItems.forEach(item => {
+                html += `
+                    <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+                        <h4 style="color: var(--accent); margin-bottom: 15px; font-size: 15px;">
+                            📌 ${item.name} (${new Date(item.date + 'T00:00:00').toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })})
+                        </h4>
+                `;
+
+                appData.salesman.forEach(code => {
+                    const key = `${code}_${item.id}`;
+                    const existing = appData.salesmanTargets[key];
+                    const target = existing ? existing.target : 0;
+
+                    html += `
+                        <div class="salesman-target-row">
+                            <div class="form-group">
+                                <label>${code}</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="target_${key}" value="${target}" placeholder="Target (tk)" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <button class="btn-secondary" onclick="saveTarget('${key}', '${code}', '${item.id}')" style="width: auto;">💾 SIMPAN</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ⭐ NEW: SAVE TARGET
+        function saveTarget(key, salesmCode, itemId) {
+            const target = parseFloat(document.getElementById(`target_${key}`).value);
+
+            if (isNaN(target) || target < 0) {
+                alert('Masukkan nilai target yang valid');
+                return;
+            }
+
+            if (!appData.salesmanTargets[key]) {
+                appData.salesmanTargets[key] = {};
+            }
+
+            appData.salesmanTargets[key].target = target;
+            appData.salesmanTargets[key].salesman = salesmCode;
+            appData.salesmanTargets[key].itemId = itemId;
+            appData.salesmanTargets[key].startDate = document.getElementById('masterPeriodStart').value;
+
+            saveAppData();
+            showAlert(`✅ Target ${salesmCode} untuk item berhasil disimpan!`, 'success');
         }
 
         function addSalesman() {
@@ -1136,6 +1221,7 @@
             document.getElementById('newSalesmanCode').value = '';
             loadSalesmanList();
             updateSalesmanFilterList();
+            loadTargetSettings(); // ⭐ Refresh untuk menambah row
         }
 
         function loadSalesmanList() {
@@ -1170,6 +1256,7 @@
             showAlert(`✅ Salesman ${code} berhasil dihapus!`, 'success');
             loadSalesmanList();
             updateSalesmanFilterList();
+            loadTargetSettings(); // ⭐ Refresh
         }
 
         function updateSalesmanFilterList() {
@@ -1204,17 +1291,19 @@
             }
 
             let html = '<div class="table-wrapper"><table>';
-            html += '<thead><tr><th>Salesman</th><th>Item</th><th>Target (tk)</th><th>Realisasi (tk)</th><th>%</th></tr></thead><tbody>';
+            html += '<thead><tr><th>Salesman</th><th>Item</th><th>Target (Salesman)</th><th>Realisasi (tk)</th><th>%</th></tr></thead><tbody>';
 
             reports.forEach(report => {
                 const item = appData.masterItems.find(i => i.id === report.itemId);
-                const percentage = item?.target > 0 ? ((report.hi / item.target) * 100).toFixed(1) : 0;
+                const salesmanTarget = appData.salesmanTargets[`${report.salesman}_${report.itemId}`];
+                const target = salesmanTarget ? salesmanTarget.target : 0;
+                const percentage = target > 0 ? ((report.hi / target) * 100).toFixed(1) : 0;
                 
                 html += `
                     <tr>
                         <td class="value-cell">${report.salesman}</td>
                         <td>${item?.name || 'N/A'}</td>
-                        <td class="value-cell">${item?.target || 0}</td>
+                        <td class="value-cell">${target}</td>
                         <td class="value-cell">${report.hi}</td>
                         <td class="percentage-cell">${percentage}%</td>
                     </tr>
@@ -1259,13 +1348,13 @@
             showAlert('✅ Password berhasil diubah!', 'success');
         }
 
-        // ============== SYNC TO GOOGLE SHEETS ==============
         function syncToGoogleSheets() {
             if (!appData.scriptUrl) return;
 
             const payload = {
                 salesman: appData.salesman,
                 masterItems: appData.masterItems,
+                salesmanTargets: appData.salesmanTargets,
                 reports: appData.reports
             };
 
@@ -1276,7 +1365,6 @@
             }).catch(err => console.log('Sync info:', err));
         }
 
-        // ============== UTILITY ==============
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
@@ -1288,6 +1376,8 @@
                 loadSalesmanHistory();
             } else if (tabName === 'report' && currentUser?.role === 'supervisor') {
                 loadAllReports();
+            } else if (tabName === 'target' && currentUser?.role === 'supervisor') {
+                loadTargetSettings();
             }
         }
 
@@ -1306,14 +1396,12 @@
             setTimeout(() => alertDiv.remove(), 3000);
         }
 
-        // ============== EVENT LISTENERS ==============
         document.addEventListener('keypress', function(e) {
             if (e.target.id === 'supervisorPass' && e.key === 'Enter') {
                 loginSupervisor();
             }
         });
 
-        // Initialize
         window.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
