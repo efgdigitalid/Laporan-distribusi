@@ -1,1408 +1,901 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LAPORAN TARGET DISTRIBUSI - System REVISI</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1e40af;
-            --secondary: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --dark-bg: #0f172a;
-            --card-bg: #1e293b;
-            --border: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --accent: #06b6d4;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1f35 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Login Screen */
-        .login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1f35 100%);
-        }
-
-        .login-box {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: slideUp 0.6s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-title {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-title h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: var(--accent);
-        }
-
-        .login-title p {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .role-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .role-button {
-            padding: 15px;
-            border: 2px solid var(--border);
-            background: var(--dark-bg);
-            color: var(--text-secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .role-button.active {
-            border-color: var(--accent);
-            background: rgba(6, 182, 212, 0.1);
-            color: var(--accent);
-        }
-
-        .role-button:hover {
-            border-color: var(--accent);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        input[type="text"],
-        input[type="password"],
-        input[type="number"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 12px;
-            background: var(--dark-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus,
-        input[type="password"]:focus,
-        input[type="number"]:focus,
-        input[type="date"]:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .alert {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .alert-error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-        }
-
-        .alert-success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-        }
-
-        /* Dashboard */
-        .dashboard-hidden {
-            display: none;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
-            animation: slideDown 0.6s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .header-title h1 {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .header-title p {
-            font-size: 12px;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-
-        .user-info {
-            text-align: right;
-            font-size: 14px;
-        }
-
-        .user-role {
-            font-size: 12px;
-            opacity: 0.9;
-            margin-top: 3px;
-        }
-
-        .logout-btn {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            margin-top: 8px;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--border);
-            overflow-x: auto;
-        }
-
-        .tab-button {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .tab-button.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 5px 20px rgba(6, 182, 212, 0.1);
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-group-full {
-            grid-column: 1 / -1;
-        }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, rgba(6, 182, 212, 0.05) 100%);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--dark-bg);
-            border-radius: 8px;
-        }
-
-        thead {
-            background: var(--primary);
-            color: white;
-        }
-
-        th {
-            padding: 12px;
-            text-align: left;
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-        }
-
-        tr:hover {
-            background: rgba(6, 182, 212, 0.05);
-        }
-
-        .value-cell {
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .percentage-cell {
-            color: var(--secondary);
-            font-weight: 700;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-small {
-            padding: 6px 10px;
-            font-size: 12px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            color: white;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-edit {
-            background: var(--warning);
-        }
-
-        .btn-edit:hover {
-            background: #d97706;
-        }
-
-        .btn-delete {
-            background: var(--danger);
-        }
-
-        .btn-delete:hover {
-            background: #dc2626;
-        }
-
-        .btn-secondary {
-            background: var(--secondary);
-            color: white;
-            width: auto;
-        }
-
-        .btn-secondary:hover {
-            background: #059669;
-        }
-
-        .salesman-target-row {
-            background: var(--dark-bg);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-bottom: 10px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            align-items: end;
-        }
-
-        @media (max-width: 768px) {
-            .salesman-target-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .header-content {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .user-info {
-                text-align: left;
-            }
-
-            table {
-                font-size: 12px;
-            }
-
-            th, td {
-                padding: 8px;
-            }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan Target Distribusi</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;
+  --accent:#58a6ff;--green:#3fb950;--orange:#f0883e;--red:#f85149;
+  --text:#e6edf3;--muted:#8b949e;--wa:#25d366;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── LOGIN ─────────────────────────────── */
+#loginWrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.loginCard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:36px;width:100%;max-width:400px}
+.loginCard h2{font-size:20px;font-weight:700;margin-bottom:4px;color:var(--accent)}
+.loginCard p{font-size:13px;color:var(--muted);margin-bottom:24px}
+.roleRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.roleBtn{padding:12px;border:2px solid var(--border);background:var(--surface2);color:var(--muted);border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;transition:.2s}
+.roleBtn.active{border-color:var(--accent);color:var(--accent);background:rgba(88,166,255,.08)}
+
+/* ── FORM ELEMENTS ──────────────────────── */
+.fGroup{margin-bottom:14px}
+.fGroup label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.fGroup input,.fGroup select{width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px}
+.fGroup input:focus,.fGroup select:focus{outline:none;border-color:var(--accent)}
+.fGroup small{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+
+/* ── BUTTONS ────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;transition:.2s;justify-content:center}
+.btn-full{width:100%}
+.btn-primary{background:var(--accent);color:#0d1117}
+.btn-primary:hover{opacity:.88}
+.btn-green{background:var(--green);color:#0d1117}
+.btn-green:hover{opacity:.88}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-wa:hover{opacity:.88}
+.btn-red{background:var(--red);color:#fff;padding:6px 10px;font-size:12px}
+.btn-red:hover{opacity:.88}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-orange{background:var(--orange);color:#0d1117;padding:6px 10px;font-size:12px}
+
+/* ── ALERT ──────────────────────────────── */
+.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;display:flex;gap:8px;align-items:center}
+.alert-err{background:rgba(248,81,73,.1);border:1px solid var(--red);color:var(--red)}
+.alert-ok{background:rgba(63,185,80,.1);border:1px solid var(--green);color:var(--green)}
+
+/* ── TOAST ──────────────────────────────── */
+#toast{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toastItem{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:13px;min-width:240px;animation:slideIn .3s ease;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toastItem.ok{border-color:var(--green);color:var(--green)}
+.toastItem.err{border-color:var(--red);color:var(--red)}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── MAIN LAYOUT ────────────────────────── */
+#app{display:none;flex-direction:column;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.topbar-title{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.badge{background:rgba(88,166,255,.15);color:var(--accent);border:1px solid rgba(88,166,255,.3);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.topbar-right{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.main{flex:1;padding:20px;max-width:900px;margin:0 auto;width:100%}
+
+/* ── TABS ───────────────────────────────── */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:24px;overflow-x:auto}
+.tab{padding:10px 16px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;border-bottom:2px solid transparent;white-space:nowrap;transition:.2s}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tabPane{display:none}.tabPane.active{display:block}
+
+/* ── CARD ───────────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
+.cardTitle{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* ── GRID ───────────────────────────────── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* ── STAT ───────────────────────────────── */
+.statBox{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px}
+.statLabel{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.statVal{font-size:22px;font-weight:700;color:var(--accent)}
+.statVal.green{color:var(--green)}
+.statVal.orange{color:var(--orange)}
+
+/* ── TABLE ──────────────────────────────── */
+.tableWrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--surface2)}
+th{padding:10px 12px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+td{padding:10px 12px;border-top:1px solid var(--border)}
+tr:hover td{background:rgba(255,255,255,.02)}
+.tdAccent{color:var(--accent);font-weight:600}
+.tdGreen{color:var(--green);font-weight:700}
+
+/* ── TARGET SALESMAN ROWS ───────────────── */
+.tsRow{display:grid;grid-template-columns:80px 1fr 110px;gap:10px;align-items:center;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.tsCode{font-weight:700;color:var(--accent);font-size:13px}
+.tsInput{width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px}
+.tsInput:focus{outline:none;border-color:var(--accent)}
+
+/* ── DIVIDER ────────────────────────────── */
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+
+/* ── WA BOX ─────────────────────────────── */
+.waBox{background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.25);border-radius:10px;padding:16px;margin-top:16px}
+.waBoxTitle{font-size:13px;font-weight:700;color:var(--wa);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+/* ── EMPTY ──────────────────────────────── */
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.emptyIcon{font-size:36px;margin-bottom:8px}
+
+/* ── SALESMAN CHIPS ──────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:13px;font-weight:600}
+.chip span{color:var(--accent)}
+
+/* ── RESPONSIVE ─────────────────────────── */
+@media(max-width:600px){
+  .grid2,.grid3,.grid4{grid-template-columns:1fr}
+  .tsRow{grid-template-columns:70px 1fr 90px}
+  .main{padding:12px}
+  .loginCard{padding:24px}
+}
+</style>
 </head>
 <body>
-    <!-- LOGIN SCREEN -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-box">
-            <div class="login-title">
-                <h1>📊 SISTEM LAPORAN TARGET</h1>
-                <p>Distribusi/Redistribusi/Item Drive</p>
-            </div>
 
-            <div class="role-selector">
-                <button class="role-button active" onclick="selectRole('salesman')">
-                    👤 SALESMAN
-                </button>
-                <button class="role-button" onclick="selectRole('supervisor')">
-                    👨‍💼 SUPERVISOR
-                </button>
-            </div>
+<div id="toast"></div>
 
-            <div id="loginError"></div>
+<!-- ═══════ LOGIN ═══════ -->
+<div id="loginWrap">
+  <div class="loginCard">
+    <h2>📊 Laporan Target Distribusi</h2>
+    <p>Login sesuai role Anda</p>
 
-            <div id="salesmanLogin">
-                <div class="form-group">
-                    <label>Pilih Kode Anda</label>
-                    <select id="salesmanCode">
-                        <option value="">-- Pilih Kode --</option>
-                    </select>
-                </div>
-                <button class="btn-primary" onclick="loginSalesman()">LOGIN SEBAGAI SALESMAN</button>
-            </div>
-
-            <div id="supervisorLogin" style="display: none;">
-                <div class="form-group">
-                    <label>Password Supervisor</label>
-                    <input type="password" id="supervisorPass" placeholder="Masukkan password...">
-                </div>
-                <button class="btn-primary" onclick="loginSupervisor()">LOGIN SEBAGAI SUPERVISOR</button>
-            </div>
-        </div>
+    <div class="roleRow">
+      <button class="roleBtn active" id="btnRoleSales" onclick="pickRole('salesman')">👤 Salesman</button>
+      <button class="roleBtn" id="btnRoleSuper" onclick="pickRole('supervisor')">👨‍💼 Supervisor</button>
     </div>
 
-    <!-- DASHBOARD SCREEN -->
-    <div id="dashboard" class="dashboard-hidden">
-        <div class="container">
-            <header>
-                <div class="header-content">
-                    <div class="header-title">
-                        <h1>📊 LAPORAN TARGET DISTRIBUSI</h1>
-                        <p id="headerSubtitle"></p>
-                    </div>
-                    <div class="user-info">
-                        <div id="userName"></div>
-                        <div class="user-role" id="userRole"></div>
-                        <button class="logout-btn" onclick="logout()">Logout</button>
-                    </div>
-                </div>
-            </header>
+    <div id="errLogin"></div>
 
-            <!-- SALESMAN DASHBOARD -->
-            <div id="salesmanDashboard" style="display: none;">
-                <div class="tabs">
-                    <button class="tab-button active" onclick="switchTab('input')">📝 INPUT HASIL</button>
-                    <button class="tab-button" onclick="switchTab('history')">📅 RIWAYAT</button>
-                </div>
-
-                <!-- Tab: INPUT HASIL -->
-                <div id="input" class="tab-content active">
-                    <div class="card">
-                        <div class="card-title">📝 Input Hasil Harian</div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Tanggal</label>
-                                <input type="date" id="reportDate" onchange="loadMasterData()">
-                            </div>
-                            <div class="form-group">
-                                <label>Item</label>
-                                <select id="itemSelect" onchange="updateItemInfo()">
-                                    <option value="">-- Pilih Item --</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div id="itemInfo" style="display: none;">
-                            <div class="stats-row">
-                                <div class="stat-card">
-                                    <div class="stat-label">Target (Target Salesman)</div>
-                                    <div class="stat-value" id="targetDisplay">0</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Realisasi Hari Ini</div>
-                                    <div class="stat-value" id="hiDisplay">0</div>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Hari Ini (tk)</label>
-                                    <input type="number" id="hiInput" placeholder="0" min="0" step="0.1" onchange="calculateStats()">
-                                </div>
-                            </div>
-
-                            <div class="stats-row">
-                                <div class="stat-card">
-                                    <div class="stat-label">MTD (Bulan Ini)</div>
-                                    <div class="stat-value" id="mtdDisplay">0</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Pencapaian (%)</div>
-                                    <div class="stat-value" id="achievementDisplay">0%</div>
-                                </div>
-                            </div>
-
-                            <button class="btn-primary" onclick="submitReport()">💾 SUBMIT LAPORAN</button>
-                            <button class="btn-secondary" onclick="resetForm()" style="margin-left: 10px; width: auto;">🔄 RESET</button>
-                        </div>
-
-                        <div id="noItemMessage" class="alert alert-error" style="display: none; margin-top: 20px;">
-                            ⚠️ Tidak ada item untuk tanggal ini. Hubungi Supervisor.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab: RIWAYAT -->
-                <div id="history" class="tab-content">
-                    <div class="card">
-                        <div class="card-title">📅 Riwayat Laporan</div>
-                        <div id="historyContent"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SUPERVISOR DASHBOARD -->
-            <div id="supervisorDashboard" style="display: none;">
-                <div class="tabs">
-                    <button class="tab-button active" onclick="switchTab('master')">📋 DATA MASTER</button>
-                    <button class="tab-button" onclick="switchTab('target')">🎯 TARGET SALESMAN</button>
-                    <button class="tab-button" onclick="switchTab('salesman')">👥 KELOLA SALESMAN</button>
-                    <button class="tab-button" onclick="switchTab('report')">📊 LAPORAN</button>
-                    <button class="tab-button" onclick="switchTab('settings')">⚙️ PENGATURAN</button>
-                </div>
-
-                <!-- Tab: DATA MASTER -->
-                <div id="master" class="tab-content active">
-                    <div class="card">
-                        <div class="card-title">📋 Master Item</div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Tanggal Periode Awal</label>
-                                <input type="date" id="masterPeriodStart">
-                            </div>
-                            <div class="form-group">
-                                <label>Tanggal Periode Akhir</label>
-                                <input type="date" id="masterPeriodEnd">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Nama Item</label>
-                                <input type="text" id="newItemName" placeholder="Contoh: Item A">
-                            </div>
-                            <div class="form-group">
-                                <label>Tanggal Berlaku</label>
-                                <input type="date" id="newItemDate">
-                            </div>
-                        </div>
-
-                        <button class="btn-primary" onclick="addMasterItem()">➕ TAMBAH ITEM</button>
-
-                        <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--accent); font-size: 16px;">Daftar Item</h3>
-                        <div id="masterItemsList"></div>
-                    </div>
-                </div>
-
-                <!-- Tab: TARGET SALESMAN ⭐ BARU -->
-                <div id="target" class="tab-content">
-                    <div class="card">
-                        <div class="card-title">🎯 Atur Target Per Salesman Per Item</div>
-                        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 13px;">
-                            📌 Setiap salesman bisa memiliki target yang berbeda-beda untuk setiap item.
-                        </p>
-
-                        <div id="targetSettingContainer"></div>
-                    </div>
-                </div>
-
-                <!-- Tab: KELOLA SALESMAN -->
-                <div id="salesman" class="tab-content">
-                    <div class="card">
-                        <div class="card-title">👥 Kelola Kode Salesman</div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Tambah Kode Salesman</label>
-                                <input type="text" id="newSalesmanCode" placeholder="Contoh: S022" pattern="S[0-9]+">
-                            </div>
-                            <div style="display: flex; align-items: flex-end;">
-                                <button class="btn-primary" onclick="addSalesman()" style="padding: 12px 20px;">➕ TAMBAH</button>
-                            </div>
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 20px;" id="salesmanList"></div>
-                    </div>
-                </div>
-
-                <!-- Tab: LAPORAN -->
-                <div id="report" class="tab-content">
-                    <div class="card">
-                        <div class="card-title">📊 Laporan Semua Salesman</div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Tanggal</label>
-                                <input type="date" id="reportFilterDate" onchange="loadAllReports()">
-                            </div>
-                            <div class="form-group">
-                                <label>Salesman (Opsional)</label>
-                                <select id="reportFilterSalesman" onchange="loadAllReports()">
-                                    <option value="">-- Semua Salesman --</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="table-wrapper" id="reportTableContainer"></div>
-                    </div>
-                </div>
-
-                <!-- Tab: PENGATURAN -->
-                <div id="settings" class="tab-content">
-                    <div class="card">
-                        <div class="card-title">⚙️ Pengaturan Sistem</div>
-                        
-                        <div class="form-row form-group-full">
-                            <div class="form-group">
-                                <label>Google Sheet ID</label>
-                                <input type="text" id="sheetId" placeholder="Masukkan Google Sheet ID...">
-                                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
-                                    📌 Dapatkan dari URL: https://docs.google.com/spreadsheets/d/<strong>SHEET_ID</strong>/edit
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="form-row form-group-full">
-                            <div class="form-group">
-                                <label>Google Apps Script URL (Webhook)</label>
-                                <input type="text" id="scriptUrl" placeholder="Masukkan URL Apps Script...">
-                                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
-                                    📌 Deploy Google Apps Script dan copy URL di sini
-                                </p>
-                            </div>
-                        </div>
-
-                        <button class="btn-primary" onclick="saveSettings()">💾 SIMPAN PENGATURAN</button>
-                        <button class="btn-secondary" onclick="testConnection()" style="margin-left: 10px; width: auto;">🔗 TEST KONEKSI</button>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">🔐 Password & Keamanan</div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Password Supervisor Baru</label>
-                                <input type="password" id="newPassword" placeholder="Kosongkan jika tidak ingin mengubah">
-                            </div>
-                        </div>
-
-                        <button class="btn-primary" onclick="changePassword()">🔒 UBAH PASSWORD</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Salesman login -->
+    <div id="formSales">
+      <div class="fGroup">
+        <label>Kode Salesman</label>
+        <select id="selCode"><option value="">-- Pilih Kode --</option></select>
+      </div>
+      <div class="fGroup">
+        <label>No. WhatsApp (opsional)</label>
+        <input type="tel" id="salesWA" placeholder="6281234567890">
+        <small>Format: 62xxx (tanpa + atau 0)</small>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doLoginSales()">Login Salesman</button>
     </div>
 
-    <script>
-        // ============== CONFIGURATION ==============
-        const CONFIG = {
-            defaultPassword: 'supervisor123',
-            storageKey: 'laporan_distribusi_data'
-        };
-
-        // ============== INITIALIZATION ==============
-        let currentUser = null;
-        let appData = {};
-
-        function initApp() {
-            loadAppData();
-            updateLoginScreens();
-            
-            // Set today as default date
-            document.getElementById('reportDate').valueAsDate = new Date();
-            if (document.getElementById('masterPeriodStart')) {
-                document.getElementById('masterPeriodStart').valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-                document.getElementById('masterPeriodEnd').valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
-                document.getElementById('newItemDate').valueAsDate = new Date();
-            }
-            if (document.getElementById('reportFilterDate')) {
-                document.getElementById('reportFilterDate').valueAsDate = new Date();
-            }
-        }
-
-        function loadAppData() {
-            const stored = localStorage.getItem(CONFIG.storageKey);
-            appData = stored ? JSON.parse(stored) : {
-                supervisorPassword: CONFIG.defaultPassword,
-                sheetId: '',
-                scriptUrl: '',
-                salesman: ['S005', 'S016', 'S017', 'S018', 'S019', 'S120', 'S121'],
-                masterItems: [],
-                salesmanTargets: {}, // ⭐ NEW: Target per salesman per item
-                reports: []
-            };
-        }
-
-        function saveAppData() {
-            localStorage.setItem(CONFIG.storageKey, JSON.stringify(appData));
-        }
-
-        function updateLoginScreens() {
-            const salesmanSelect = document.getElementById('salesmanCode');
-            salesmanSelect.innerHTML = '<option value="">-- Pilih Kode --</option>';
-            appData.salesman.forEach(code => {
-                const option = document.createElement('option');
-                option.value = code;
-                option.textContent = code;
-                salesmanSelect.appendChild(option);
-            });
-        }
-
-        // ============== LOGIN & ROLE ==============
-        function selectRole(role) {
-            document.querySelectorAll('.role-button').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            document.getElementById('salesmanLogin').style.display = role === 'salesman' ? 'block' : 'none';
-            document.getElementById('supervisorLogin').style.display = role === 'supervisor' ? 'block' : 'none';
-            
-            clearLoginError();
-        }
-
-        function loginSalesman() {
-            const code = document.getElementById('salesmanCode').value;
-            if (!code) {
-                showLoginError('Pilih kode salesman terlebih dahulu');
-                return;
-            }
-
-            currentUser = { role: 'salesman', code: code };
-            showDashboard();
-        }
-
-        function loginSupervisor() {
-            const password = document.getElementById('supervisorPass').value;
-            if (password !== appData.supervisorPassword) {
-                showLoginError('Password salah!');
-                document.getElementById('supervisorPass').value = '';
-                return;
-            }
-
-            currentUser = { role: 'supervisor' };
-            showDashboard();
-        }
-
-        function showLoginError(message) {
-            const errorDiv = document.getElementById('loginError');
-            errorDiv.innerHTML = `<div class="alert alert-error">❌ ${message}</div>`;
-        }
-
-        function clearLoginError() {
-            document.getElementById('loginError').innerHTML = '';
-        }
-
-        function showDashboard() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('dashboard').classList.remove('dashboard-hidden');
-
-            if (currentUser.role === 'salesman') {
-                document.getElementById('salesmanDashboard').style.display = 'block';
-                document.getElementById('supervisorDashboard').style.display = 'none';
-                document.getElementById('headerSubtitle').textContent = `Laporan Distribusi untuk ${currentUser.code}`;
-                document.getElementById('userName').textContent = `Salesman ${currentUser.code}`;
-                document.getElementById('userRole').textContent = 'Role: SALESMAN';
-                loadMasterData();
-                loadSalesmanHistory();
-            } else {
-                document.getElementById('salesmanDashboard').style.display = 'none';
-                document.getElementById('supervisorDashboard').style.display = 'block';
-                document.getElementById('headerSubtitle').textContent = 'Pengaturan & Monitoring';
-                document.getElementById('userName').textContent = 'Supervisor';
-                document.getElementById('userRole').textContent = 'Role: SUPERVISOR';
-                loadMasterDataList();
-                loadTargetSettings(); // ⭐ NEW
-                loadSalesmanList();
-                updateSalesmanFilterList();
-                loadAllReports();
-            }
-        }
-
-        function logout() {
-            if (confirm('Yakin ingin logout?')) {
-                currentUser = null;
-                document.getElementById('dashboard').classList.add('dashboard-hidden');
-                document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('salesmanCode').value = '';
-                document.getElementById('supervisorPass').value = '';
-                document.getElementById('loginError').innerHTML = '';
-            }
-        }
-
-        // ============== SALESMAN FUNCTIONS ==============
-        function loadMasterData() {
-            const date = document.getElementById('reportDate').value;
-            const items = appData.masterItems.filter(item => item.date === date);
-
-            const itemSelect = document.getElementById('itemSelect');
-            itemSelect.innerHTML = '<option value="">-- Pilih Item --</option>';
-            items.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.id;
-                option.textContent = item.name;
-                itemSelect.appendChild(option);
-            });
-
-            document.getElementById('itemInfo').style.display = items.length > 0 ? 'block' : 'none';
-            document.getElementById('noItemMessage').style.display = items.length === 0 ? 'flex' : 'none';
-            resetForm();
-        }
-
-        function updateItemInfo() {
-            const itemId = document.getElementById('itemSelect').value;
-            const item = appData.masterItems.find(i => i.id === itemId);
-
-            if (item) {
-                // ⭐ Get target dari salesman target, bukan master item
-                const salesmantargetKey = `${currentUser.code}_${itemId}`;
-                const salesmanTarget = appData.salesmanTargets[salesmantargetKey];
-                const targetValue = salesmanTarget ? salesmanTarget.target : 0;
-                
-                document.getElementById('targetDisplay').textContent = targetValue;
-                calculateStats();
-            }
-        }
-
-        function calculateStats() {
-            const hiValue = parseFloat(document.getElementById('hiInput').value) || 0;
-            const targetValue = parseFloat(document.getElementById('targetDisplay').textContent) || 0;
-            const date = document.getElementById('reportDate').value;
-            const itemId = document.getElementById('itemSelect').value;
-
-            // Calculate MTD
-            const startDate = new Date(appData.salesmanTargets[`${currentUser.code}_${itemId}`]?.startDate || document.getElementById('masterPeriodStart')?.value);
-            const endDate = new Date(document.getElementById('reportDate').value);
-
-            const mtdReports = appData.reports.filter(r => {
-                const reportDate = new Date(r.date);
-                return r.salesman === currentUser.code && 
-                       r.itemId === itemId &&
-                       reportDate >= startDate && 
-                       reportDate <= endDate;
-            });
-
-            const mtdValue = mtdReports.reduce((sum, r) => sum + (r.hi || 0), 0) + hiValue;
-            const achievement = targetValue > 0 ? ((mtdValue / targetValue) * 100).toFixed(1) : 0;
-
-            document.getElementById('hiDisplay').textContent = hiValue.toLocaleString('id-ID');
-            document.getElementById('mtdDisplay').textContent = mtdValue.toLocaleString('id-ID');
-            document.getElementById('achievementDisplay').textContent = achievement + '%';
-        }
-
-        function resetForm() {
-            document.getElementById('hiInput').value = '0';
-            document.getElementById('hiDisplay').textContent = '0';
-            document.getElementById('mtdDisplay').textContent = '0';
-            document.getElementById('achievementDisplay').textContent = '0%';
-        }
-
-        function submitReport() {
-            const date = document.getElementById('reportDate').value;
-            const itemId = document.getElementById('itemSelect').value;
-            const hi = parseFloat(document.getElementById('hiInput').value) || 0;
-
-            if (!itemId) {
-                alert('Pilih item terlebih dahulu');
-                return;
-            }
-
-            const existingIndex = appData.reports.findIndex(r => 
-                r.salesman === currentUser.code && 
-                r.itemId === itemId && 
-                r.date === date
-            );
-
-            if (existingIndex >= 0) {
-                appData.reports[existingIndex].hi = hi;
-            } else {
-                appData.reports.push({
-                    id: Date.now().toString(),
-                    salesman: currentUser.code,
-                    itemId: itemId,
-                    date: date,
-                    hi: hi,
-                    submitted: new Date().toISOString()
-                });
-            }
-
-            saveAppData();
-            syncToGoogleSheets();
-            showAlert('✅ Laporan berhasil disimpan!', 'success');
-            loadSalesmanHistory();
-            calculateStats();
-        }
-
-        function loadSalesmanHistory() {
-            const date = document.getElementById('reportDate').value;
-            const reports = appData.reports.filter(r => 
-                r.salesman === currentUser.code && 
-                r.date === date
-            );
-
-            let html = '';
-            if (reports.length === 0) {
-                html = '<div class="empty-state"><div class="empty-state-icon">📭</div>Belum ada laporan untuk hari ini</div>';
-            } else {
-                html = '<div class="table-wrapper"><table>';
-                html += '<thead><tr><th>Item</th><th>Target (tk)</th><th>Realisasi (tk)</th><th>Aksi</th></tr></thead><tbody>';
-                
-                reports.forEach(report => {
-                    const item = appData.masterItems.find(i => i.id === report.itemId);
-                    const salesmanTarget = appData.salesmanTargets[`${currentUser.code}_${report.itemId}`];
-                    const target = salesmanTarget ? salesmanTarget.target : 0;
-                    
-                    html += `
-                        <tr>
-                            <td>${item?.name || 'N/A'}</td>
-                            <td class="value-cell">${target}</td>
-                            <td class="value-cell">${report.hi}</td>
-                            <td><button class="btn-small btn-delete" onclick="deleteReport('${report.id}')">🗑️ Hapus</button></td>
-                        </tr>
-                    `;
-                });
-                
-                html += '</tbody></table></div>';
-            }
-
-            document.getElementById('historyContent').innerHTML = html;
-        }
-
-        function deleteReport(id) {
-            if (!confirm('Hapus laporan ini?')) return;
-            appData.reports = appData.reports.filter(r => r.id !== id);
-            saveAppData();
-            syncToGoogleSheets();
-            showAlert('✅ Laporan berhasil dihapus!', 'success');
-            loadSalesmanHistory();
-        }
-
-        // ============== SUPERVISOR FUNCTIONS ==============
-        function addMasterItem() {
-            const name = document.getElementById('newItemName').value.trim();
-            const date = document.getElementById('newItemDate').value;
-
-            if (!name || !date) {
-                alert('Isi semua field');
-                return;
-            }
-
-            appData.masterItems.push({
-                id: Date.now().toString(),
-                name: name,
-                date: date
-            });
-
-            saveAppData();
-            showAlert('✅ Item berhasil ditambahkan!', 'success');
-            document.getElementById('newItemName').value = '';
-            document.getElementById('newItemDate').valueAsDate = new Date();
-            loadMasterDataList();
-            loadTargetSettings(); // ⭐ Refresh target settings
-        }
-
-        function loadMasterDataList() {
-            const container = document.getElementById('masterItemsList');
-            
-            if (appData.masterItems.length === 0) {
-                container.innerHTML = '<div class="empty-state">Belum ada item master</div>';
-                return;
-            }
-
-            let html = '<div class="table-wrapper"><table>';
-            html += '<thead><tr><th>Tanggal</th><th>Nama Item</th><th>Aksi</th></tr></thead><tbody>';
-
-            appData.masterItems.forEach(item => {
-                const dateObj = new Date(item.date + 'T00:00:00');
-                const dateStr = dateObj.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
-                
-                html += `
-                    <tr>
-                        <td>${dateStr}</td>
-                        <td>${item.name}</td>
-                        <td><button class="btn-small btn-delete" onclick="deleteMasterItem('${item.id}')">🗑️ Hapus</button></td>
-                    </tr>
-                `;
-            });
-
-            html += '</tbody></table></div>';
-            container.innerHTML = html;
-        }
-
-        function deleteMasterItem(id) {
-            if (!confirm('Hapus item ini?')) return;
-            appData.masterItems = appData.masterItems.filter(i => i.id !== id);
-            saveAppData();
-            showAlert('✅ Item berhasil dihapus!', 'success');
-            loadMasterDataList();
-            loadTargetSettings(); // ⭐ Refresh
-        }
-
-        // ⭐ NEW: LOAD TARGET SETTINGS
-        function loadTargetSettings() {
-            const container = document.getElementById('targetSettingContainer');
-            
-            if (appData.masterItems.length === 0) {
-                container.innerHTML = '<div class="alert alert-error">⚠️ Buat item master dulu di tab "DATA MASTER"</div>';
-                return;
-            }
-
-            if (appData.salesman.length === 0) {
-                container.innerHTML = '<div class="alert alert-error">⚠️ Buat kode salesman dulu di tab "KELOLA SALESMAN"</div>';
-                return;
-            }
-
-            let html = '';
-
-            appData.masterItems.forEach(item => {
-                html += `
-                    <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
-                        <h4 style="color: var(--accent); margin-bottom: 15px; font-size: 15px;">
-                            📌 ${item.name} (${new Date(item.date + 'T00:00:00').toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })})
-                        </h4>
-                `;
-
-                appData.salesman.forEach(code => {
-                    const key = `${code}_${item.id}`;
-                    const existing = appData.salesmanTargets[key];
-                    const target = existing ? existing.target : 0;
-
-                    html += `
-                        <div class="salesman-target-row">
-                            <div class="form-group">
-                                <label>${code}</label>
-                            </div>
-                            <div class="form-group">
-                                <input type="number" id="target_${key}" value="${target}" placeholder="Target (tk)" min="0" step="0.1">
-                            </div>
-                            <div>
-                                <button class="btn-secondary" onclick="saveTarget('${key}', '${code}', '${item.id}')" style="width: auto;">💾 SIMPAN</button>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += '</div>';
-            });
-
-            container.innerHTML = html;
-        }
-
-        // ⭐ NEW: SAVE TARGET
-        function saveTarget(key, salesmCode, itemId) {
-            const target = parseFloat(document.getElementById(`target_${key}`).value);
-
-            if (isNaN(target) || target < 0) {
-                alert('Masukkan nilai target yang valid');
-                return;
-            }
-
-            if (!appData.salesmanTargets[key]) {
-                appData.salesmanTargets[key] = {};
-            }
-
-            appData.salesmanTargets[key].target = target;
-            appData.salesmanTargets[key].salesman = salesmCode;
-            appData.salesmanTargets[key].itemId = itemId;
-            appData.salesmanTargets[key].startDate = document.getElementById('masterPeriodStart').value;
-
-            saveAppData();
-            showAlert(`✅ Target ${salesmCode} untuk item berhasil disimpan!`, 'success');
-        }
-
-        function addSalesman() {
-            const code = document.getElementById('newSalesmanCode').value.trim().toUpperCase();
-
-            if (!code) {
-                alert('Masukkan kode salesman');
-                return;
-            }
-
-            if (!code.match(/^S\d+$/)) {
-                alert('Format harus S### (contoh: S022)');
-                return;
-            }
-
-            if (appData.salesman.includes(code)) {
-                alert('Kode sudah ada');
-                return;
-            }
-
-            appData.salesman.push(code);
-            appData.salesman.sort();
-            saveAppData();
-            updateLoginScreens();
-            showAlert('✅ Salesman berhasil ditambahkan!', 'success');
-            document.getElementById('newSalesmanCode').value = '';
-            loadSalesmanList();
-            updateSalesmanFilterList();
-            loadTargetSettings(); // ⭐ Refresh untuk menambah row
-        }
-
-        function loadSalesmanList() {
-            const container = document.getElementById('salesmanList');
-            container.innerHTML = '';
-
-            appData.salesman.forEach(code => {
-                const card = document.createElement('div');
-                card.style.cssText = `
-                    background: var(--dark-bg);
-                    padding: 12px;
-                    border-radius: 8px;
-                    border: 2px solid var(--border);
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    transition: all 0.3s ease;
-                `;
-                card.innerHTML = `
-                    <span style="font-weight: 700; color: var(--accent);">${code}</span>
-                    <button class="btn-small btn-delete" onclick="removeSalesman('${code}')">✕</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function removeSalesman(code) {
-            if (!confirm(`Hapus salesman ${code}?`)) return;
-            appData.salesman = appData.salesman.filter(s => s !== code);
-            saveAppData();
-            updateLoginScreens();
-            showAlert(`✅ Salesman ${code} berhasil dihapus!`, 'success');
-            loadSalesmanList();
-            updateSalesmanFilterList();
-            loadTargetSettings(); // ⭐ Refresh
-        }
-
-        function updateSalesmanFilterList() {
-            const select = document.getElementById('reportFilterSalesman');
-            const currentValue = select.value;
-            select.innerHTML = '<option value="">-- Semua Salesman --</option>';
-            
-            appData.salesman.forEach(code => {
-                const option = document.createElement('option');
-                option.value = code;
-                option.textContent = code;
-                select.appendChild(option);
-            });
-            
-            select.value = currentValue;
-        }
-
-        function loadAllReports() {
-            const date = document.getElementById('reportFilterDate').value;
-            const salesman = document.getElementById('reportFilterSalesman').value;
-
-            let reports = appData.reports.filter(r => r.date === date);
-            if (salesman) {
-                reports = reports.filter(r => r.salesman === salesman);
-            }
-
-            const container = document.getElementById('reportTableContainer');
-
-            if (reports.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div>Tidak ada laporan</div>';
-                return;
-            }
-
-            let html = '<div class="table-wrapper"><table>';
-            html += '<thead><tr><th>Salesman</th><th>Item</th><th>Target (Salesman)</th><th>Realisasi (tk)</th><th>%</th></tr></thead><tbody>';
-
-            reports.forEach(report => {
-                const item = appData.masterItems.find(i => i.id === report.itemId);
-                const salesmanTarget = appData.salesmanTargets[`${report.salesman}_${report.itemId}`];
-                const target = salesmanTarget ? salesmanTarget.target : 0;
-                const percentage = target > 0 ? ((report.hi / target) * 100).toFixed(1) : 0;
-                
-                html += `
-                    <tr>
-                        <td class="value-cell">${report.salesman}</td>
-                        <td>${item?.name || 'N/A'}</td>
-                        <td class="value-cell">${target}</td>
-                        <td class="value-cell">${report.hi}</td>
-                        <td class="percentage-cell">${percentage}%</td>
-                    </tr>
-                `;
-            });
-
-            html += '</tbody></table></div>';
-            container.innerHTML = html;
-        }
-
-        function saveSettings() {
-            const sheetId = document.getElementById('sheetId').value.trim();
-            const scriptUrl = document.getElementById('scriptUrl').value.trim();
-
-            if (sheetId) appData.sheetId = sheetId;
-            if (scriptUrl) appData.scriptUrl = scriptUrl;
-
-            saveAppData();
-            showAlert('✅ Pengaturan berhasil disimpan!', 'success');
-        }
-
-        function testConnection() {
-            if (!appData.scriptUrl) {
-                alert('Set Google Apps Script URL terlebih dahulu');
-                return;
-            }
-
-            alert('Fitur test koneksi akan segera hadir');
-        }
-
-        function changePassword() {
-            const newPassword = document.getElementById('newPassword').value;
-
-            if (!newPassword) {
-                alert('Masukkan password baru');
-                return;
-            }
-
-            appData.supervisorPassword = newPassword;
-            saveAppData();
-            document.getElementById('newPassword').value = '';
-            showAlert('✅ Password berhasil diubah!', 'success');
-        }
-
-        function syncToGoogleSheets() {
-            if (!appData.scriptUrl) return;
-
-            const payload = {
-                salesman: appData.salesman,
-                masterItems: appData.masterItems,
-                salesmanTargets: appData.salesmanTargets,
-                reports: appData.reports
-            };
-
-            fetch(appData.scriptUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(payload)
-            }).catch(err => console.log('Sync info:', err));
-        }
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-
-            if (tabName === 'history' && currentUser?.role === 'salesman') {
-                loadSalesmanHistory();
-            } else if (tabName === 'report' && currentUser?.role === 'supervisor') {
-                loadAllReports();
-            } else if (tabName === 'target' && currentUser?.role === 'supervisor') {
-                loadTargetSettings();
-            }
-        }
-
-        function showAlert(message, type = 'info') {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type === 'error' ? 'error' : 'success'}`;
-            alertDiv.innerHTML = message;
-            alertDiv.style.position = 'fixed';
-            alertDiv.style.top = '20px';
-            alertDiv.style.right = '20px';
-            alertDiv.style.zIndex = '9999';
-            alertDiv.style.maxWidth = '400px';
-
-            document.body.appendChild(alertDiv);
-
-            setTimeout(() => alertDiv.remove(), 3000);
-        }
-
-        document.addEventListener('keypress', function(e) {
-            if (e.target.id === 'supervisorPass' && e.key === 'Enter') {
-                loginSupervisor();
-            }
-        });
-
-        window.addEventListener('DOMContentLoaded', initApp);
-    </script>
+    <!-- Supervisor login -->
+    <div id="formSuper" style="display:none">
+      <div class="fGroup">
+        <label>Password</label>
+        <input type="password" id="inPass" placeholder="Masukkan password..." onkeydown="if(event.key==='Enter')doLoginSuper()">
+      </div>
+      <div class="fGroup">
+        <label>No. WhatsApp Supervisor (opsional)</label>
+        <input type="tel" id="superWA" placeholder="6281234567890">
+        <small>Untuk menerima ringkasan laporan</small>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doLoginSuper()">Login Supervisor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ APP ═══════ -->
+<div id="app">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-title">
+      📊 <span>Laporan Distribusi</span>
+      <span class="badge" id="topBadge">SALESMAN</span>
+    </div>
+    <div class="topbar-right">
+      <span id="topUser"></span>
+      <button class="btn btn-ghost" onclick="doLogout()" style="padding:6px 12px;font-size:12px">Logout</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- ── SALESMAN DASHBOARD ────────────── -->
+    <div id="dashSales" style="display:none">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab(this,'paneSalesInput')">📝 Input Hasil</button>
+        <button class="tab" onclick="switchTab(this,'paneSalesHistory')">📅 Riwayat</button>
+      </div>
+
+      <!-- INPUT HASIL -->
+      <div id="paneSalesInput" class="tabPane active">
+        <div class="card">
+          <div class="cardTitle">📝 Input Laporan Harian</div>
+
+          <div class="grid2">
+            <div class="fGroup">
+              <label>Tanggal</label>
+              <input type="date" id="inDate" onchange="onDateChange()">
+            </div>
+            <div class="fGroup">
+              <label>Item</label>
+              <select id="inItem" onchange="onItemChange()">
+                <option value="">-- Pilih Item --</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="inputDetail" style="display:none">
+            <div class="grid4" style="margin-bottom:16px">
+              <div class="statBox"><div class="statLabel">Target</div><div class="statVal" id="sdTarget">0</div></div>
+              <div class="statBox"><div class="statLabel">Hari Ini (tk)</div><div class="statVal green" id="sdHi">0</div></div>
+              <div class="statBox"><div class="statLabel">MTD</div><div class="statVal" id="sdMtd">0</div></div>
+              <div class="statBox"><div class="statLabel">Pencapaian</div><div class="statVal orange" id="sdPct">0%</div></div>
+            </div>
+
+            <div class="fGroup">
+              <label>Realisasi Hari Ini (tk)</label>
+              <input type="number" id="inHi" min="0" step="0.1" placeholder="0" oninput="recalc()">
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-green" onclick="submitLaporan()">💾 Submit Laporan</button>
+              <button class="btn btn-ghost" onclick="resetInput()">🔄 Reset</button>
+            </div>
+
+            <!-- WA Salesman -->
+            <div class="waBox">
+              <div class="waBoxTitle">💬 Kirim Laporan ke WhatsApp</div>
+              <button class="btn btn-wa btn-full" onclick="genWASales()">📲 Generate & Kirim ke WhatsApp</button>
+              <p style="font-size:11px;color:var(--muted);margin-top:8px">Nomor WA dari saat login. Pesan akan terbuka di WhatsApp Web/App.</p>
+            </div>
+          </div>
+
+          <div id="noItemMsg" class="alert alert-err" style="display:none">
+            ⚠️ Tidak ada item untuk tanggal ini. Hubungi Supervisor.
+          </div>
+        </div>
+      </div>
+
+      <!-- RIWAYAT -->
+      <div id="paneSalesHistory" class="tabPane">
+        <div class="card">
+          <div class="cardTitle">📅 Riwayat Laporan Anda</div>
+          <div id="salesHistory"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUPERVISOR DASHBOARD ──────────── -->
+    <div id="dashSuper" style="display:none">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab(this,'paneDataMaster')">📋 Data Master</button>
+        <button class="tab" onclick="switchTab(this,'paneTargetSales')">🎯 Target Salesman</button>
+        <button class="tab" onclick="switchTab(this,'paneKelolaSales')">👥 Kelola Salesman</button>
+        <button class="tab" onclick="switchTab(this,'paneLaporan')">📊 Laporan</button>
+        <button class="tab" onclick="switchTab(this,'paneSettings')">⚙️ Pengaturan</button>
+      </div>
+
+      <!-- DATA MASTER -->
+      <div id="paneDataMaster" class="tabPane active">
+        <div class="card">
+          <div class="cardTitle">📋 Master Item</div>
+
+          <div class="grid2">
+            <div class="fGroup">
+              <label>Tanggal Periode Awal</label>
+              <input type="date" id="mPeriodStart">
+            </div>
+            <div class="fGroup">
+              <label>Tanggal Periode Akhir</label>
+              <input type="date" id="mPeriodEnd">
+            </div>
+          </div>
+
+          <div class="grid2">
+            <div class="fGroup">
+              <label>Nama Item</label>
+              <input type="text" id="mItemName" placeholder="Contoh: TS490">
+            </div>
+            <div class="fGroup">
+              <label>Tanggal Berlaku</label>
+              <input type="date" id="mItemDate">
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="addItem()">➕ Tambah Item</button>
+
+          <hr class="divider">
+
+          <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Daftar Item</div>
+          <div id="itemList"></div>
+        </div>
+      </div>
+
+      <!-- TARGET SALESMAN ── FITUR UTAMA -->
+      <div id="paneTargetSales" class="tabPane">
+        <div class="card">
+          <div class="cardTitle">🎯 Atur Target Per Salesman Per Item</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px">
+            Setiap salesman dapat memiliki target berbeda untuk setiap item. Isi target lalu klik <strong style="color:var(--green)">Simpan</strong>.
+          </p>
+          <div id="targetContainer"></div>
+        </div>
+      </div>
+
+      <!-- KELOLA SALESMAN -->
+      <div id="paneKelolaSales" class="tabPane">
+        <div class="card">
+          <div class="cardTitle">👥 Kelola Kode Salesman</div>
+
+          <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+            <input type="text" id="inNewCode" placeholder="S022" style="width:140px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px">
+            <button class="btn btn-primary" onclick="addSalesman()">➕ Tambah</button>
+          </div>
+
+          <div class="chips" id="salesmanChips"></div>
+        </div>
+      </div>
+
+      <!-- LAPORAN -->
+      <div id="paneLaporan" class="tabPane">
+        <div class="card">
+          <div class="cardTitle">📊 Monitor Laporan</div>
+
+          <div class="grid2" style="margin-bottom:16px">
+            <div class="fGroup">
+              <label>Filter Tanggal</label>
+              <input type="date" id="rDate" onchange="loadReport()">
+            </div>
+            <div class="fGroup">
+              <label>Filter Salesman</label>
+              <select id="rSales" onchange="loadReport()">
+                <option value="">Semua Salesman</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="reportTable"></div>
+
+          <!-- WA Supervisor -->
+          <div class="waBox">
+            <div class="waBoxTitle">💬 Kirim Ringkasan ke WhatsApp</div>
+            <button class="btn btn-wa btn-full" onclick="genWASuper()">📲 Generate & Kirim Ringkasan ke WhatsApp</button>
+            <p style="font-size:11px;color:var(--muted);margin-top:8px">Ringkasan semua laporan hari ini akan dikirim ke nomor WA Supervisor.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENGATURAN -->
+      <div id="paneSettings" class="tabPane">
+        <div class="card">
+          <div class="cardTitle">⚙️ Pengaturan WhatsApp</div>
+          <div class="fGroup">
+            <label>No. WhatsApp Supervisor</label>
+            <input type="tel" id="setWA" placeholder="6281234567890" oninput="saveWA()">
+            <small>Simpan otomatis saat diketik</small>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="cardTitle">🔐 Ubah Password</div>
+          <div class="fGroup">
+            <label>Password Baru</label>
+            <input type="password" id="setPwd" placeholder="Kosongkan jika tidak berubah">
+          </div>
+          <button class="btn btn-primary" onclick="changePwd()">🔒 Simpan Password</button>
+        </div>
+
+        <div class="card">
+          <div class="cardTitle">🗄️ Google Sheets (Opsional)</div>
+          <div class="fGroup">
+            <label>Sheet ID</label>
+            <input type="text" id="setSheetId" placeholder="ID dari URL Google Sheets">
+          </div>
+          <div class="fGroup">
+            <label>Apps Script URL</label>
+            <input type="text" id="setScriptUrl" placeholder="https://script.googleapis.com/...">
+          </div>
+          <button class="btn btn-primary" onclick="saveSheets()">💾 Simpan</button>
+        </div>
+      </div>
+
+    </div><!-- /dashSuper -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════
+const KEY = 'lapDist_v3';
+let D = {}, ME = null;
+
+function load(){
+  const s = localStorage.getItem(KEY);
+  D = s ? JSON.parse(s) : {
+    pwd: 'supervisor123',
+    superWA: '',
+    sheetId: '',
+    scriptUrl: '',
+    salesman: ['S005','S016','S017','S018','S019','S120','S121'],
+    salesWA: {},
+    items: [],       // {id, name, date}
+    periodStart: '', periodEnd: '',
+    targets: {},     // key: "CODE_itemId" → number
+    reports: []      // {id, code, itemId, date, hi, ts}
+  };
+}
+function save(){ localStorage.setItem(KEY, JSON.stringify(D)); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+// ════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════
+function toast(msg, type='ok'){
+  const el = document.createElement('div');
+  el.className = 'toastItem '+(type==='err'?'err':'ok');
+  el.textContent = (type==='err'?'❌ ':'✅ ')+msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(()=>el.remove(), 3000);
+}
+
+// ════════════════════════════════════════
+//  ROLE SWITCH
+// ════════════════════════════════════════
+function pickRole(r){
+  document.getElementById('formSales').style.display = r==='salesman'?'block':'none';
+  document.getElementById('formSuper').style.display = r==='supervisor'?'block':'none';
+  document.getElementById('btnRoleSales').className = 'roleBtn'+(r==='salesman'?' active':'');
+  document.getElementById('btnRoleSuper').className = 'roleBtn'+(r==='supervisor'?' active':'');
+  document.getElementById('errLogin').innerHTML = '';
+}
+
+// ════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════
+function errLogin(m){
+  document.getElementById('errLogin').innerHTML = `<div class="alert alert-err">❌ ${m}</div>`;
+}
+
+function doLoginSales(){
+  const code = document.getElementById('selCode').value;
+  const wa   = document.getElementById('salesWA').value.trim();
+  if(!code) return errLogin('Pilih kode salesman');
+  if(wa){ D.salesWA[code]=wa; save(); }
+  ME = {role:'salesman', code, wa: wa||D.salesWA[code]||''};
+  showApp();
+}
+
+function doLoginSuper(){
+  const pwd = document.getElementById('inPass').value;
+  const wa  = document.getElementById('superWA').value.trim();
+  if(pwd !== D.pwd) return errLogin('Password salah');
+  if(wa){ D.superWA=wa; save(); }
+  ME = {role:'supervisor', wa: wa||D.superWA||''};
+  showApp();
+}
+
+function doLogout(){
+  if(!confirm('Logout?')) return;
+  ME=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginWrap').style.display='flex';
+  document.getElementById('inPass').value='';
+}
+
+// ════════════════════════════════════════
+//  SHOW APP
+// ════════════════════════════════════════
+function showApp(){
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('app').style.display='flex';
+
+  if(ME.role==='salesman'){
+    document.getElementById('topBadge').textContent='SALESMAN';
+    document.getElementById('topUser').textContent='Salesman '+ME.code;
+    document.getElementById('dashSales').style.display='block';
+    document.getElementById('dashSuper').style.display='none';
+    // init
+    document.getElementById('inDate').valueAsDate = new Date();
+    onDateChange();
+  } else {
+    document.getElementById('topBadge').textContent='SUPERVISOR';
+    document.getElementById('topUser').textContent='Supervisor';
+    document.getElementById('dashSales').style.display='none';
+    document.getElementById('dashSuper').style.display='block';
+    // init
+    initSuper();
+  }
+}
+
+// ════════════════════════════════════════
+//  TAB SWITCH
+// ════════════════════════════════════════
+function switchTab(btn, paneId){
+  const container = btn.closest('.tabs').parentElement;
+  container.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  container.querySelectorAll('.tabPane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(paneId).classList.add('active');
+
+  // lazy refresh
+  if(paneId==='paneTargetSales') renderTargetSettings();
+  if(paneId==='paneLaporan') loadReport();
+  if(paneId==='paneKelolaSales') renderChips();
+  if(paneId==='paneDataMaster') renderItemList();
+  if(paneId==='paneSalesHistory') renderSalesHistory();
+  if(paneId==='paneSettings'){
+    document.getElementById('setWA').value = D.superWA||'';
+    document.getElementById('setSheetId').value = D.sheetId||'';
+    document.getElementById('setScriptUrl').value = D.scriptUrl||'';
+  }
+}
+
+// ════════════════════════════════════════
+//  SALESMAN FUNCTIONS
+// ════════════════════════════════════════
+function onDateChange(){
+  const date = document.getElementById('inDate').value;
+  const items = D.items.filter(i=>i.date===date);
+  const sel = document.getElementById('inItem');
+  sel.innerHTML = '<option value="">-- Pilih Item --</option>';
+  items.forEach(i=>{
+    const o = document.createElement('option');
+    o.value=i.id; o.textContent=i.name; sel.appendChild(o);
+  });
+  document.getElementById('inputDetail').style.display='none';
+  document.getElementById('noItemMsg').style.display = items.length===0?'flex':'none';
+}
+
+function onItemChange(){
+  const itemId = document.getElementById('inItem').value;
+  if(!itemId){ document.getElementById('inputDetail').style.display='none'; return; }
+  document.getElementById('inputDetail').style.display='block';
+  document.getElementById('noItemMsg').style.display='none';
+  document.getElementById('inHi').value='';
+  recalc();
+}
+
+function getMyTarget(itemId){
+  const key = ME.code+'_'+itemId;
+  return parseFloat(D.targets[key])||0;
+}
+
+function getMTD(itemId, beforeDate){
+  // sum hi dari awal periode sampai sebelum tanggal ini
+  const start = D.periodStart;
+  return D.reports.filter(r=>
+    r.code===ME.code && r.itemId===itemId &&
+    r.date>=start && r.date<beforeDate
+  ).reduce((s,r)=>s+(r.hi||0),0);
+}
+
+function recalc(){
+  const itemId = document.getElementById('inItem').value;
+  if(!itemId) return;
+  const hi     = parseFloat(document.getElementById('inHi').value)||0;
+  const target = getMyTarget(itemId);
+  const date   = document.getElementById('inDate').value;
+  const mtd    = getMTD(itemId, date) + hi;
+  const pct    = target>0 ? (mtd/target*100).toFixed(1) : 0;
+
+  document.getElementById('sdTarget').textContent = target.toLocaleString('id-ID');
+  document.getElementById('sdHi').textContent     = hi.toLocaleString('id-ID');
+  document.getElementById('sdMtd').textContent    = mtd.toLocaleString('id-ID');
+  document.getElementById('sdPct').textContent    = pct+'%';
+}
+
+function submitLaporan(){
+  const date   = document.getElementById('inDate').value;
+  const itemId = document.getElementById('inItem').value;
+  const hi     = parseFloat(document.getElementById('inHi').value)||0;
+  if(!itemId) return toast('Pilih item dulu','err');
+
+  const idx = D.reports.findIndex(r=>r.code===ME.code&&r.itemId===itemId&&r.date===date);
+  if(idx>=0){ D.reports[idx].hi=hi; D.reports[idx].ts=Date.now(); }
+  else { D.reports.push({id:uid(),code:ME.code,itemId,date,hi,ts:Date.now()}); }
+  save();
+  toast('Laporan berhasil disimpan!');
+  recalc();
+}
+
+function resetInput(){
+  document.getElementById('inHi').value='';
+  recalc();
+}
+
+function renderSalesHistory(){
+  const code = ME.code;
+  const reps = D.reports.filter(r=>r.code===code).sort((a,b)=>b.date.localeCompare(a.date));
+  const el = document.getElementById('salesHistory');
+  if(!reps.length){ el.innerHTML='<div class="empty"><div class="emptyIcon">📭</div>Belum ada laporan</div>'; return; }
+
+  let h = '<div class="tableWrap"><table><thead><tr><th>Tanggal</th><th>Item</th><th>Target</th><th>Hi (tk)</th><th>Aksi</th></tr></thead><tbody>';
+  reps.forEach(r=>{
+    const item = D.items.find(i=>i.id===r.itemId);
+    const target = parseFloat(D.targets[r.code+'_'+r.itemId])||0;
+    h += `<tr>
+      <td>${r.date}</td>
+      <td>${item?.name||'-'}</td>
+      <td class="tdAccent">${target}</td>
+      <td class="tdGreen">${r.hi}</td>
+      <td><button class="btn btn-red" onclick="delReport('${r.id}')">🗑️ Hapus</button></td>
+    </tr>`;
+  });
+  h += '</tbody></table></div>';
+  el.innerHTML = h;
+}
+
+function delReport(id){
+  if(!confirm('Hapus laporan ini?')) return;
+  D.reports = D.reports.filter(r=>r.id!==id);
+  save(); toast('Laporan dihapus');
+  renderSalesHistory();
+}
+
+// ── WA Salesman ──
+function genWASales(){
+  const date   = document.getElementById('inDate').value;
+  const itemId = document.getElementById('inItem').value;
+  if(!itemId){ toast('Pilih item dulu','err'); return; }
+  const item   = D.items.find(i=>i.id===itemId);
+  const hi     = parseFloat(document.getElementById('inHi').value)||0;
+  const target = getMyTarget(itemId);
+  const mtd    = getMTD(itemId, date) + hi;
+  const pct    = target>0 ? (mtd/target*100).toFixed(1) : 0;
+  const dateStr = new Date(date+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  const msg =
+`📊 *LAPORAN TARGET DISTRIBUSI*
+
+👤 Salesman : ${ME.code}
+📅 Tanggal  : ${dateStr}
+📦 Item     : ${item?.name}
+
+━━━━━━━━━━━━━━━━━
+🎯 Target      : ${target.toLocaleString('id-ID')} tk
+📈 Hi (hari ini): ${hi.toLocaleString('id-ID')} tk
+📊 MTD         : ${mtd.toLocaleString('id-ID')} tk
+✅ Pencapaian  : ${pct}%
+━━━━━━━━━━━━━━━━━
+⏰ ${new Date().toLocaleTimeString('id-ID')}`;
+
+  openWA(ME.wa, msg);
+}
+
+// ════════════════════════════════════════
+//  SUPERVISOR FUNCTIONS
+// ════════════════════════════════════════
+function initSuper(){
+  renderItemList();
+  renderChips();
+  updateSalesFilter();
+  document.getElementById('rDate').valueAsDate = new Date();
+  loadReport();
+  // restore periode
+  if(D.periodStart) document.getElementById('mPeriodStart').value = D.periodStart;
+  if(D.periodEnd)   document.getElementById('mPeriodEnd').value   = D.periodEnd;
+  if(D.items.length && !document.getElementById('mItemDate').value)
+    document.getElementById('mItemDate').valueAsDate = new Date();
+}
+
+// ── Item Master ──
+function addItem(){
+  const name = document.getElementById('mItemName').value.trim();
+  const date = document.getElementById('mItemDate').value;
+  const ps   = document.getElementById('mPeriodStart').value;
+  const pe   = document.getElementById('mPeriodEnd').value;
+
+  if(!name||!date) return toast('Isi nama item & tanggal berlaku','err');
+
+  D.items.push({id:uid(), name, date});
+  if(ps) D.periodStart = ps;
+  if(pe) D.periodEnd   = pe;
+  save();
+  toast('Item ditambahkan!');
+  document.getElementById('mItemName').value = '';
+  renderItemList();
+  renderTargetSettings();
+}
+
+function renderItemList(){
+  const el = document.getElementById('itemList');
+  if(!D.items.length){ el.innerHTML='<div class="empty"><div class="emptyIcon">📋</div>Belum ada item</div>'; return; }
+  let h='<div class="tableWrap"><table><thead><tr><th>Tanggal</th><th>Nama Item</th><th>Aksi</th></tr></thead><tbody>';
+  D.items.forEach(i=>{
+    const d = new Date(i.date+'T00:00:00').toLocaleDateString('id-ID',{year:'numeric',month:'short',day:'numeric'});
+    h+=`<tr><td>${d}</td><td>${i.name}</td><td><button class="btn btn-red" onclick="delItem('${i.id}')">🗑️ Hapus</button></td></tr>`;
+  });
+  h+='</tbody></table></div>';
+  el.innerHTML=h;
+}
+
+function delItem(id){
+  if(!confirm('Hapus item ini?')) return;
+  D.items = D.items.filter(i=>i.id!==id);
+  save(); toast('Item dihapus');
+  renderItemList(); renderTargetSettings();
+}
+
+// ── TARGET SALESMAN ──
+function renderTargetSettings(){
+  const el = document.getElementById('targetContainer');
+  if(!D.items.length){
+    el.innerHTML='<div class="alert alert-err">⚠️ Buat item master dulu di tab <strong>Data Master</strong></div>'; return;
+  }
+  if(!D.salesman.length){
+    el.innerHTML='<div class="alert alert-err">⚠️ Tambah kode salesman dulu di tab <strong>Kelola Salesman</strong></div>'; return;
+  }
+
+  let h='';
+  D.items.forEach(item=>{
+    const d = new Date(item.date+'T00:00:00').toLocaleDateString('id-ID',{year:'numeric',month:'short',day:'numeric'});
+    h+=`<div style="margin-bottom:24px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;padding:8px 12px;background:var(--surface2);border-radius:6px;border-left:3px solid var(--accent)">
+        📦 ${item.name} &nbsp;·&nbsp; <span style="color:var(--muted);font-weight:400">${d}</span>
+      </div>`;
+
+    D.salesman.forEach(code=>{
+      const key = code+'_'+item.id;
+      const val = D.targets[key]||'';
+      h+=`<div class="tsRow">
+        <div class="tsCode">${code}</div>
+        <input class="tsInput" type="number" id="t_${key}" value="${val}" placeholder="Target (tk)" min="0" step="0.1">
+        <button class="btn btn-green" style="padding:8px 12px;font-size:12px" onclick="saveTarget('${key}','${code}','${item.id}','${item.name}')">💾 Simpan</button>
+      </div>`;
+    });
+
+    h+='<button class="btn btn-ghost" style="font-size:12px;padding:7px 14px;margin-top:6px" onclick="saveAllForItem(\''+item.id+'\')">💾 Simpan Semua '+item.name+'</button>';
+    h+='</div>';
+  });
+
+  el.innerHTML=h;
+}
+
+function saveTarget(key, code, itemId, itemName){
+  const el = document.getElementById('t_'+key);
+  const val = parseFloat(el.value);
+  if(isNaN(val)||val<0){ toast('Nilai tidak valid','err'); return; }
+  D.targets[key] = val;
+  save();
+  toast(`Target ${code} - ${itemName} disimpan: ${val} tk`);
+}
+
+function saveAllForItem(itemId){
+  const item = D.items.find(i=>i.id===itemId);
+  let count=0;
+  D.salesman.forEach(code=>{
+    const key=code+'_'+itemId;
+    const el=document.getElementById('t_'+key);
+    if(!el) return;
+    const val=parseFloat(el.value);
+    if(!isNaN(val)&&val>=0){ D.targets[key]=val; count++; }
+  });
+  save();
+  toast(`${count} target untuk ${item?.name} berhasil disimpan!`);
+}
+
+// ── Kelola Salesman ──
+function addSalesman(){
+  const code = document.getElementById('inNewCode').value.trim().toUpperCase();
+  if(!code.match(/^S\d+$/)) return toast('Format harus S### (contoh: S022)','err');
+  if(D.salesman.includes(code)) return toast('Kode sudah ada','err');
+  D.salesman.push(code); D.salesman.sort(); save();
+  toast(`Salesman ${code} ditambahkan`);
+  document.getElementById('inNewCode').value='';
+  renderChips(); updateSalesFilter(); renderTargetSettings();
+}
+
+function renderChips(){
+  const el = document.getElementById('salesmanChips');
+  el.innerHTML = D.salesman.map(c=>`
+    <div class="chip"><span>${c}</span>
+      <button onclick="removeSalesman('${c}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:0;line-height:1">×</button>
+    </div>`).join('');
+}
+
+function removeSalesman(code){
+  if(!confirm(`Hapus salesman ${code}?`)) return;
+  D.salesman = D.salesman.filter(c=>c!==code); save();
+  toast(`${code} dihapus`);
+  renderChips(); updateSalesFilter(); renderTargetSettings();
+  // update login select
+  buildLoginSelect();
+}
+
+// ── Laporan ──
+function updateSalesFilter(){
+  const sel = document.getElementById('rSales');
+  const cur = sel.value;
+  sel.innerHTML='<option value="">Semua Salesman</option>';
+  D.salesman.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+  if(cur) sel.value=cur;
+}
+
+function loadReport(){
+  const date  = document.getElementById('rDate').value;
+  const code  = document.getElementById('rSales').value;
+  let reps = D.reports.filter(r=>r.date===date);
+  if(code) reps = reps.filter(r=>r.code===code);
+
+  const el = document.getElementById('reportTable');
+  if(!reps.length){ el.innerHTML='<div class="empty"><div class="emptyIcon">📭</div>Tidak ada laporan</div>'; return; }
+
+  let h='<div class="tableWrap"><table><thead><tr><th>Salesman</th><th>Item</th><th>Target</th><th>Realisasi</th><th>Pct</th><th>Waktu</th></tr></thead><tbody>';
+  reps.forEach(r=>{
+    const item   = D.items.find(i=>i.id===r.itemId);
+    const target = parseFloat(D.targets[r.code+'_'+r.itemId])||0;
+    const pct    = target>0 ? (r.hi/target*100).toFixed(1) : '0.0';
+    const time   = r.ts ? new Date(r.ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) : '-';
+    h+=`<tr>
+      <td class="tdAccent">${r.code}</td>
+      <td>${item?.name||'-'}</td>
+      <td>${target}</td>
+      <td class="tdGreen">${r.hi}</td>
+      <td class="tdGreen">${pct}%</td>
+      <td style="color:var(--muted)">${time}</td>
+    </tr>`;
+  });
+  h+='</tbody></table></div>';
+  el.innerHTML=h;
+}
+
+// ── WA Supervisor ──
+function genWASuper(){
+  const date = document.getElementById('rDate').value;
+  const reps = D.reports.filter(r=>r.date===date);
+  if(!reps.length){ toast('Tidak ada laporan untuk tanggal ini','err'); return; }
+
+  const dateStr = new Date(date+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  let msg = `📊 *RINGKASAN LAPORAN TARGET DISTRIBUSI*\n📅 ${dateStr}\n📦 Total: ${reps.length} laporan\n${'━'.repeat(24)}\n`;
+
+  reps.forEach(r=>{
+    const item   = D.items.find(i=>i.id===r.itemId);
+    const target = parseFloat(D.targets[r.code+'_'+r.itemId])||0;
+    const pct    = target>0 ? (r.hi/target*100).toFixed(1) : '0.0';
+    msg += `\n👤 ${r.code} — ${item?.name||'-'}\n   🎯 Target: ${target} tk\n   📈 Hi: ${r.hi} tk\n   📊 Pct: ${pct}%\n`;
+  });
+
+  msg += `\n${'━'.repeat(24)}\n⏰ ${new Date().toLocaleTimeString('id-ID')}`;
+  openWA(D.superWA||ME.wa, msg);
+}
+
+// ── Settings ──
+function saveWA(){
+  D.superWA = document.getElementById('setWA').value.trim(); save();
+}
+function changePwd(){
+  const p = document.getElementById('setPwd').value;
+  if(!p){ toast('Masukkan password baru','err'); return; }
+  D.pwd=p; save(); document.getElementById('setPwd').value='';
+  toast('Password berhasil diubah!');
+}
+function saveSheets(){
+  D.sheetId    = document.getElementById('setSheetId').value.trim();
+  D.scriptUrl  = document.getElementById('setScriptUrl').value.trim();
+  save(); toast('Pengaturan disimpan!');
+}
+
+// ── Open WhatsApp ──
+function openWA(num, msg){
+  if(!num){ toast('Nomor WA belum diatur. Set nomor saat login atau di tab Pengaturan.','err'); return; }
+  const clean = num.replace(/\D/g,'');
+  window.open('https://wa.me/'+clean+'?text='+encodeURIComponent(msg),'_blank');
+  toast('WhatsApp Web terbuka!');
+}
+
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+function buildLoginSelect(){
+  const sel = document.getElementById('selCode');
+  sel.innerHTML='<option value="">-- Pilih Kode --</option>';
+  D.salesman.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+}
+
+(function init(){
+  load();
+  buildLoginSelect();
+  // Default date fields
+  const today = new Date().toISOString().split('T')[0];
+  const firstDay = today.slice(0,7)+'-01';
+  const lastDay  = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).toISOString().split('T')[0];
+  document.getElementById('mPeriodStart').value = firstDay;
+  document.getElementById('mPeriodEnd').value   = lastDay;
+  document.getElementById('mItemDate').value    = today;
+})();
+</script>
 </body>
 </html>
