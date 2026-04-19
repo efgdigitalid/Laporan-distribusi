@@ -217,20 +217,31 @@ tr:hover td{background:rgba(255,255,255,.02)}
           </div>
 
           <div id="inputDetail" style="display:none">
-            <div class="grid4" style="margin-bottom:16px">
-              <div class="statBox"><div class="statLabel">Target</div><div class="statVal" id="sdTarget">0</div></div>
+
+            <!-- TARGET INFO -->
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px">Target Bulan Ini</span>
+              <span style="font-size:22px;font-weight:700;color:var(--accent)" id="sdTarget">0</span>
+            </div>
+
+            <!-- INPUT REALISASI — field utama yang bisa diedit -->
+            <div class="fGroup">
+              <label>✏️ Realisasi Hari Ini (tk) — Isi di sini</label>
+              <input type="number" id="inHi" min="0" step="0.1" placeholder="Ketik angka realisasi hari ini..."
+                style="font-size:20px;padding:14px 16px;border:2px solid var(--accent);background:var(--surface2)"
+                oninput="recalc()" autocomplete="off" inputmode="decimal">
+              <small style="color:var(--accent)">👆 Ketuk kolom ini untuk mulai mengisi</small>
+            </div>
+
+            <!-- SUMMARY OTOMATIS -->
+            <div class="grid3" style="margin-bottom:16px">
               <div class="statBox"><div class="statLabel">Hari Ini (tk)</div><div class="statVal green" id="sdHi">0</div></div>
               <div class="statBox"><div class="statLabel">MTD</div><div class="statVal" id="sdMtd">0</div></div>
               <div class="statBox"><div class="statLabel">Pencapaian</div><div class="statVal orange" id="sdPct">0%</div></div>
             </div>
 
-            <div class="fGroup">
-              <label>Realisasi Hari Ini (tk)</label>
-              <input type="number" id="inHi" min="0" step="0.1" placeholder="0" oninput="recalc()">
-            </div>
-
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="btn btn-green" onclick="submitLaporan()">💾 Submit Laporan</button>
+              <button class="btn btn-green" style="flex:1" onclick="submitLaporan()">💾 Submit Laporan</button>
               <button class="btn btn-ghost" onclick="resetInput()">🔄 Reset</button>
             </div>
 
@@ -359,36 +370,68 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
       <!-- PENGATURAN -->
       <div id="paneSettings" class="tabPane">
+
+        <!-- Ganti Password -->
         <div class="card">
-          <div class="cardTitle">⚙️ Pengaturan WhatsApp</div>
+          <div class="cardTitle">🔐 Ganti Password Supervisor</div>
+          <div class="fGroup">
+            <label>Password Lama</label>
+            <input type="password" id="setPwdOld" placeholder="Masukkan password saat ini">
+          </div>
+          <div class="fGroup">
+            <label>Password Baru</label>
+            <input type="password" id="setPwdNew" placeholder="Minimal 4 karakter">
+          </div>
+          <div class="fGroup">
+            <label>Konfirmasi Password Baru</label>
+            <input type="password" id="setPwdConfirm" placeholder="Ulangi password baru">
+          </div>
+          <div id="pwdMsg"></div>
+          <button class="btn btn-primary" onclick="changePwd()">🔒 Simpan Password Baru</button>
+          <p style="font-size:11px;color:var(--muted);margin-top:10px">⚠️ Password default: <strong>supervisor123</strong>. Segera ganti setelah pertama login.</p>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="card">
+          <div class="cardTitle">📱 WhatsApp Supervisor</div>
           <div class="fGroup">
             <label>No. WhatsApp Supervisor</label>
             <input type="tel" id="setWA" placeholder="6281234567890" oninput="saveWA()">
-            <small>Simpan otomatis saat diketik</small>
+            <small>Format 62xxx · disimpan otomatis saat diketik</small>
           </div>
         </div>
 
+        <!-- Google Sheets -->
         <div class="card">
-          <div class="cardTitle">🔐 Ubah Password</div>
-          <div class="fGroup">
-            <label>Password Baru</label>
-            <input type="password" id="setPwd" placeholder="Kosongkan jika tidak berubah">
-          </div>
-          <button class="btn btn-primary" onclick="changePwd()">🔒 Simpan Password</button>
-        </div>
-
-        <div class="card">
-          <div class="cardTitle">🗄️ Google Sheets (Opsional)</div>
+          <div class="cardTitle">🗄️ Google Sheets Sync</div>
           <div class="fGroup">
             <label>Sheet ID</label>
-            <input type="text" id="setSheetId" placeholder="ID dari URL Google Sheets">
+            <input type="text" id="setSheetId" placeholder="Dari URL: /spreadsheets/d/SHEET_ID/edit">
+            <small>Bagian panjang di antara /d/ dan /edit pada URL Google Sheets</small>
           </div>
           <div class="fGroup">
-            <label>Apps Script URL</label>
-            <input type="text" id="setScriptUrl" placeholder="https://script.googleapis.com/...">
+            <label>Apps Script URL (Web App)</label>
+            <input type="text" id="setScriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+            <small>URL setelah deploy Apps Script sebagai Web App</small>
           </div>
-          <button class="btn btn-primary" onclick="saveSheets()">💾 Simpan</button>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="saveGSheets()">💾 Simpan</button>
+            <button class="btn btn-ghost" onclick="testKoneksi()">🔗 Test Koneksi</button>
+            <button class="btn btn-ghost" onclick="syncAllNow()">☁️ Sync Sekarang</button>
+          </div>
+          <div id="syncStatus" style="margin-top:12px"></div>
+          <div style="margin-top:16px;padding:12px;background:var(--surface2);border-radius:8px;font-size:12px;color:var(--muted);line-height:1.8">
+            <strong style="color:var(--text)">📋 Cara Setup Google Sheets:</strong><br>
+            1. Buka <a href="https://sheets.google.com" target="_blank" style="color:var(--accent)">sheets.google.com</a> → Buat spreadsheet baru<br>
+            2. Copy Sheet ID dari URL<br>
+            3. Buka <a href="https://script.google.com" target="_blank" style="color:var(--accent)">script.google.com</a> → New project<br>
+            4. Paste kode dari file <strong>LaporanDistribusi.gs</strong><br>
+            5. Ganti SPREADSHEET_ID → Run <strong>setupSheets()</strong><br>
+            6. Deploy → Web app → Execute as: Me · Access: Anyone<br>
+            7. Copy URL → Paste di kolom Apps Script URL di atas
+          </div>
         </div>
+
       </div>
 
     </div><!-- /dashSuper -->
@@ -517,9 +560,11 @@ function switchTab(btn, paneId){
   if(paneId==='paneDataMaster') renderItemList();
   if(paneId==='paneSalesHistory') renderSalesHistory();
   if(paneId==='paneSettings'){
-    document.getElementById('setWA').value = D.superWA||'';
-    document.getElementById('setSheetId').value = D.sheetId||'';
-    document.getElementById('setScriptUrl').value = D.scriptUrl||'';
+    document.getElementById('setWA').value       = D.superWA||'';
+    document.getElementById('setSheetId').value  = D.sheetId||'';
+    document.getElementById('setScriptUrl').value= D.scriptUrl||'';
+    document.getElementById('pwdMsg').innerHTML  = '';
+    document.getElementById('syncStatus').innerHTML = '';
   }
 }
 
@@ -544,8 +589,16 @@ function onItemChange(){
   if(!itemId){ document.getElementById('inputDetail').style.display='none'; return; }
   document.getElementById('inputDetail').style.display='block';
   document.getElementById('noItemMsg').style.display='none';
-  document.getElementById('inHi').value='';
+
+  // Load nilai yang sudah ada jika laporan hari ini sudah disubmit
+  const date    = document.getElementById('inDate').value;
+  const existing = D.reports.find(r=>r.code===ME.code&&r.itemId===itemId&&r.date===date);
+  document.getElementById('inHi').value = existing ? existing.hi : '';
+
   recalc();
+
+  // Fokus otomatis ke input agar langsung bisa ketik
+  setTimeout(()=>{ document.getElementById('inHi').focus(); }, 100);
 }
 
 function getMyTarget(itemId){
@@ -589,6 +642,7 @@ function submitLaporan(){
   save();
   toast('Laporan berhasil disimpan!');
   recalc();
+  autoSync();
 }
 
 function resetInput(){
@@ -751,6 +805,7 @@ function saveTarget(key, code, itemId, itemName){
   D.targets[key] = val;
   save();
   toast(`Target ${code} - ${itemName} disimpan: ${val} tk`);
+  if(D.scriptUrl) postToSheets('sync_target', D).catch(()=>{});
 }
 
 function saveAllForItem(itemId){
@@ -765,6 +820,7 @@ function saveAllForItem(itemId){
   });
   save();
   toast(`${count} target untuk ${item?.name} berhasil disimpan!`);
+  if(D.scriptUrl) postToSheets('sync_target', D).catch(()=>{});
 }
 
 // ── Kelola Salesman ──
@@ -856,16 +912,92 @@ function genWASuper(){
 function saveWA(){
   D.superWA = document.getElementById('setWA').value.trim(); save();
 }
+
 function changePwd(){
-  const p = document.getElementById('setPwd').value;
-  if(!p){ toast('Masukkan password baru','err'); return; }
-  D.pwd=p; save(); document.getElementById('setPwd').value='';
+  const oldPwd  = document.getElementById('setPwdOld').value;
+  const newPwd  = document.getElementById('setPwdNew').value;
+  const confirm = document.getElementById('setPwdConfirm').value;
+  const msgEl   = document.getElementById('pwdMsg');
+
+  msgEl.innerHTML = '';
+
+  if(!oldPwd || !newPwd || !confirm){
+    msgEl.innerHTML = '<div class="alert alert-err">❌ Semua field wajib diisi</div>';
+    return;
+  }
+  if(oldPwd !== D.pwd){
+    msgEl.innerHTML = '<div class="alert alert-err">❌ Password lama salah</div>';
+    return;
+  }
+  if(newPwd.length < 4){
+    msgEl.innerHTML = '<div class="alert alert-err">❌ Password baru minimal 4 karakter</div>';
+    return;
+  }
+  if(newPwd !== confirm){
+    msgEl.innerHTML = '<div class="alert alert-err">❌ Konfirmasi password tidak cocok</div>';
+    return;
+  }
+
+  D.pwd = newPwd; save();
+  document.getElementById('setPwdOld').value     = '';
+  document.getElementById('setPwdNew').value     = '';
+  document.getElementById('setPwdConfirm').value = '';
+  msgEl.innerHTML = '<div class="alert alert-ok">✅ Password berhasil diubah!</div>';
   toast('Password berhasil diubah!');
+  setTimeout(()=>{ msgEl.innerHTML=''; }, 4000);
 }
-function saveSheets(){
-  D.sheetId    = document.getElementById('setSheetId').value.trim();
-  D.scriptUrl  = document.getElementById('setScriptUrl').value.trim();
-  save(); toast('Pengaturan disimpan!');
+
+function saveGSheets(){
+  D.sheetId   = document.getElementById('setSheetId').value.trim();
+  D.scriptUrl = document.getElementById('setScriptUrl').value.trim();
+  save();
+  toast('Pengaturan Google Sheets disimpan!');
+}
+
+async function testKoneksi(){
+  if(!D.scriptUrl){ toast('Isi Apps Script URL dulu','err'); return; }
+  const el = document.getElementById('syncStatus');
+  el.innerHTML = '<span style="color:var(--muted);font-size:13px">⏳ Menguji koneksi...</span>';
+  try {
+    const url  = D.scriptUrl + (D.scriptUrl.includes('?')?'&':'?') + 'action=ping';
+    const resp = await fetch(url, { mode:'no-cors' });
+    el.innerHTML = '<div class="alert alert-ok">✅ Koneksi berhasil! Apps Script aktif.</div>';
+    toast('Koneksi berhasil!');
+  } catch(e) {
+    el.innerHTML = '<div class="alert alert-ok">✅ Request terkirim (no-cors). Cek Execution Log di Apps Script untuk verifikasi.</div>';
+    toast('Request terkirim — cek Apps Script log');
+  }
+}
+
+async function syncAllNow(){
+  if(!D.scriptUrl){ toast('Isi Apps Script URL dulu','err'); return; }
+  const el = document.getElementById('syncStatus');
+  el.innerHTML = '<span style="color:var(--muted);font-size:13px">⏳ Menyinkronkan data...</span>';
+  try {
+    await postToSheets('sync_all', D);
+    el.innerHTML = '<div class="alert alert-ok">✅ Sync selesai! Data tersimpan di Google Sheets.</div>';
+    toast('Sync ke Google Sheets berhasil!');
+  } catch(err) {
+    el.innerHTML = '<div class="alert alert-err">❌ Gagal sync: '+err.message+'</div>';
+    toast('Gagal sync: '+err.message,'err');
+  }
+}
+
+// Kirim data ke Apps Script
+async function postToSheets(action, data){
+  if(!D.scriptUrl) return;
+  await fetch(D.scriptUrl, {
+    method  : 'POST',
+    mode    : 'no-cors',
+    headers : { 'Content-Type': 'application/json' },
+    body    : JSON.stringify({ action, data })
+  });
+}
+
+// Auto-sync setelah submit laporan
+async function autoSync(){
+  if(!D.scriptUrl) return;
+  try { await postToSheets('sync_report', D); } catch(_){}
 }
 
 // ── Open WhatsApp ──
